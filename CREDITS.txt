@@ -1,0 +1,24 @@
+Lane Siege 3D - an original tribute to the "Line Tower Wars" custom-map genre.
+Game code, terrain/effects/HUD art and WebAudio sounds: original, made for this project.
+No Blizzard / Warcraft III code or assets are used.
+
+Third-party assets (bundled in assets/models.js as embedded GLB, assets/three.bundle.js):
+- KayKit : Character Pack Skeletons 1.0 by Kay Lousberg (www.kaylousberg.com) - License: CC0 1.0
+  https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0
+  Used: Skeleton_Minion (Grunt creep), Skeleton_Warrior (Brute creep); animations trimmed to Walk/Run/Death/Idle.
+- KayKit : Medieval Hexagon Pack 1.0 by Kay Lousberg (www.kaylousberg.com) - License: CC0 1.0
+  https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0
+  Used: building_tower_A/B/base/catapult (blue), building_castle (red), projectile_catapult,
+  tree_single_A/B, trees_A_medium, rock_single_A/C.
+- three.js r160 (MIT License, Copyright 2010-2023 three.js authors), see assets/THREE_LICENSE.txt.
+  Bundled with GLTFLoader and SkeletonUtils from three/examples (MIT).
+Procedural (built from three.js primitives, original): Dire Wolf, Wyvern, Ogre Warlord creeps,
+archer figure, ballista, frost crystal, fire brazier, banners, upgrade decorations, portals.
+- KayKit : Character Pack Adventures 1.0 by Kay Lousberg (www.kaylousberg.com) - License: CC0 1.0
+  https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0
+  Used as heroes: Knight (Paladin), Barbarian (Warchief), Mage (Archmage), Rogue (Shadowblade);
+  animations trimmed to Idle/Walk/Attack/Cast/Death (assets/heroes_models.js).
+Base tiers (Keep/Castle/Citadel) are composed from the KayKit castle + tower models.
+
+(v5: hero models removed.) Orc/Undead towers and bases are tinted KayKit Medieval Hexagon pieces (CC0) combined with
+original procedural geometry. No Blizzard assets are used; race and hero names are generic fantasy names.

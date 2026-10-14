@@ -1,0 +1,12 @@
+const {chromium}=require('playwright-core');const path=require('path'),fs=require('fs');const OUT=path.join(__dirname,'out');fs.mkdirSync(OUT,{recursive:true});const GAME='file://'+path.resolve(__dirname,'..','index.html');const CHROME=process.env.CHROME_PATH||'/usr/bin/google-chrome';
+(async()=>{const b=await chromium.launch({executablePath:CHROME,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const pg=await b.newPage({viewport:{width:1500,height:850}});const errs=[];pg.on('pageerror',e=>errs.push(e.message));
+await pg.goto(GAME);await pg.waitForFunction(()=>window.LTW&&LTW.ready,null,{timeout:180000});await pg.click('#lstart');
+await pg.evaluate(()=>{const G=LTW.G;G.paused=true;LTW.cam.goal=null;LTW.cam.tx=5.5;LTW.cam.tz=9;LTW.cam.dist=15;LTW.cam.yaw=0});await pg.waitForTimeout(800);
+const kinds=[['arrow','spark',0],['cannon','boom',1.4],['frost','frosthit',0],['sniper','spark',0,1],['flak','boom',1],['spear','spark',0,0,.6],['rock','boom',1.5],['poison','spark',0],['spirit','spark',0],['meat','boom',1.3],['bone','spark',0,1],['wyrm','boom',.8]];
+await pg.evaluate(K=>{const G=LTW.G,p=G.players[0];K.forEach(([k,ty,r,crit,stun],n)=>{const x=1.5+(n%4)*2.7,y=4.5+Math.floor(n/4)*3;const fly=k==='flak'||k==='poison'||k==='wyrm';
+ const tgt={x,y,fly,dead:false,dir:0};G._imp={k,lvl:2,a:-Math.PI/2,stun,crit:!!crit,tgt,splash:r,air:fly};for(let rep=0;rep<1;rep++)window.fx(p,ty,x,y,{r});
+ window.fx(p,'dmgnum',x,y,{v:crit?412:37,crit:!!crit,fly});window.fx(p,'float',x,y+1.1,{text:k})});G._imp=null;
+ window.fx(p,'chain',1.5,13.5,{pts:[[1.5,13.5],[3.5,13],[5.5,13.8],[7.5,13.2]],color:0xa0d0ff});window.fx(p,'pulse',9.5,13.5,{r:1.8});window.fx(p,'death',2,1.5,{type:'boss'});window.fx(p,'death',5,1.5,{type:'flying',fly:1});window.fx(p,'death',8,1.5,{type:'armored'})},kinds);
+await pg.evaluate(()=>{LTW.G.paused=false;LTW.G.speed=1});await pg.waitForTimeout(380);await pg.evaluate(()=>{LTW.G.paused=true});
+await pg.screenshot({path:path.join(OUT,'show.png')});console.log('errs',errs);await b.close()})();

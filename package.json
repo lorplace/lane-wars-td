@@ -1,0 +1,7 @@
+{
+  "name": "lane-wars-td",
+  "private": true,
+  "description": "Line Tower Wars-style 3D tower defense (Three.js)",
+  "scripts": {"test": "node tests/v5.js && node tests/ms.js && node tests/imp.js"},
+  "devDependencies": {"playwright-core": "^1.47.0"}
+}

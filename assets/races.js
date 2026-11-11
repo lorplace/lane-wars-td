@@ -40,7 +40,7 @@ function lineHit(p,h,ang,len,w,dmg,stun,color){const dx=Math.cos(ang),dy=Math.si
 towerStep=function(p,t,dt){t.cd-=dt;if(t.fl>0)t.fl-=dt;if(t.cd>0)return;const d=t.def;if(d.support){t.cd=.5;return}const s=tStat(t),tx=t.x+.5,ty=t.y+.5;
  if(d.pulse){let any=false;for(const c of p.creeps)if(!c.dead&&!c.fly&&Math.hypot(c.x-tx,c.y-ty)<=s.range){damage(p,c,s.dmg);c.slowT=Math.max(c.slowT,1.2);any=true}
   if(any){t.cd=s.rate;t.fl=.3;fx(p,'pulse',tx,ty,{r:s.range})}return}
- let tgt=null,ty0=-1;for(const c of p.creeps){if(c.dead||(c.fly?!d.air:!d.ground))continue;if(Math.hypot(c.x-tx,c.y-ty)<=s.range&&c.y>ty0){ty0=c.y;tgt=c}}
+ const tgt=firstTarget(p,d,tx,ty,s.range);
  if(!tgt)return;t.cd=s.rate;t.ang=Math.atan2(tgt.y-ty,tgt.x-tx);t.fl=.18;
  if(d.chain){chainHit(p,tx,ty-.3,tgt,s.dmg,d.chain,.75,0,0xa0d0ff);if(p.i===0)sfx('sniper');return}
  p.proj.push({k:d.id,arc:!!d.arc,x:tx,y:ty-.25,sx:tx,sy:ty-.25,tgt,ex:tgt.x,ey:tgt.y,sp:d.pspd||8,dmg:s.dmg,splash:d.splash||0,slow:d.slow?1.5+.3*t.lvl:0,air:d.air,ground:d.ground,prog:0,a:t.ang,lvl:t.lvl,h:0,

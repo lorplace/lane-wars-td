@@ -76,8 +76,23 @@ function endGame(){if(G.over&&G.over!=='spect')return;const alive=G.players.filt
  sfx(G.over==='win'?'win':'lose');showOv()}
 function damage(p,c,dmg){const real=Math.max(dmg*.25,dmg-c.armor);c.hp-=real;c.hitT=.12;if(c.hp<=0&&!c.dead){c.dead=true;p.gold+=c.bounty;p.kills++;
  fx(p,'death',c.x,c.y,{ttl:.9,type:c.type,big:c.big,fly:c.fly,dir:c.dir});fx(p,'float',c.x,c.y-.3,{ttl:1.1,text:'+'+c.bounty});if(p.i===0)sfx('die')}}
-function towerStep(p,t,dt){t.cd-=dt;if(t.fl>0)t.fl-=dt;if(t.cd>0)return;const s=tStat(t),tx=t.x+.5,ty=t.y+.5;let tgt=null,ty0=-1;
- for(const c of p.creeps){if(c.dead||(c.fly?!t.def.air:!t.def.ground))continue;if(Math.hypot(c.x-tx,c.y-ty)<=s.range&&c.y>ty0){ty0=c.y;tgt=c}}
+function firstTarget(p, def, x, y, range) {
+ let target = null;
+ let shortest = Infinity;
+ for (const creep of p.creeps) {
+  if (creep.dead || !(creep.fly ? def.air : def.ground)) continue;
+  if ((creep.x-x)**2 + (creep.y-y)**2 > range*range) continue;
+  // Ground units finish on reaching the last row's center.
+  const remaining = creep.fly ? ROWS-.05-creep.y :
+   p.dist[creep.ty][creep.tx] + Math.abs(creep.tx+.5-creep.x) + Math.abs(creep.ty+.5-creep.y);
+  if (remaining < shortest) {
+   shortest = remaining;
+   target = creep;
+  }
+ }
+ return target;
+}
+function towerStep(p,t,dt){t.cd-=dt;if(t.fl>0)t.fl-=dt;if(t.cd>0)return;const s=tStat(t),tx=t.x+.5,ty=t.y+.5;const tgt=firstTarget(p,t.def,tx,ty,s.range);
  if(!tgt)return;t.cd=s.rate;t.ang=Math.atan2(tgt.y-ty,tgt.x-tx);t.fl=.18;
  p.proj.push({k:t.def.id,x:tx,y:ty-.25,sx:tx,sy:ty-.25,tgt,ex:tgt.x,ey:tgt.y,sp:t.def.pspd,dmg:s.dmg,splash:t.def.splash||0,slow:t.def.slow?1.5+.3*t.lvl:0,
   air:t.def.air,ground:t.def.ground,prog:0,a:t.ang,lvl:t.lvl,h:0});if(p.i===0)sfx(t.def.id)}
